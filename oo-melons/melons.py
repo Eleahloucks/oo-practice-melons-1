@@ -1,4 +1,6 @@
 """Classes for melon orders."""
+#for Further study part 1 import random function
+from random import randint
 
 
 class AbstractMelonOrder:
@@ -16,11 +18,20 @@ class AbstractMelonOrder:
         self.species = species
         self.qty = qty
         self.shipped = False
+    #further study p1
+    #create base price function for splurge pricing
+    def get_base_price(self):
+        """ choosing a random integer between 5-9 as the base price. """
+        #base price generated a random number between 5-9 inclusively
+        base_price = randint(5, 9)
+        #returns the random number
+        return base_price
 
-    def get_total(self):
+
+
+    def get_total(self, base_price):
         """Calculate price, including tax."""
 
-        base_price = 5
         # instead of creating a total variable set to 0 on line 24,
         # I thought it made more sense to define the total variable
         # after conditional logic that calculates changes to base price
