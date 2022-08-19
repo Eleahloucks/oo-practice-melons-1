@@ -1,6 +1,9 @@
 """Classes for melon orders."""
 #for Further study part 1 import random function
 from random import randint
+from datetime import datetime
+
+
 
 
 class AbstractMelonOrder:
@@ -9,24 +12,37 @@ class AbstractMelonOrder:
     order_type = None
     tax = 0
 
+
+
     # every time an instance of the Abstract class is created,
     # user must pass in melon species and quantity. Default
     # value of shipped is False because order has only been
     # created
     def __init__(self, species, qty):
         """Initialize melon order attributes."""
+        if qty > 100:
+            raise TooManyMelonsError()
+
+
         self.species = species
         self.qty = qty
         self.shipped = False
+        self.order_time = datetime.now()
+
     #further study p1
     #create base price function for splurge pricing
     def get_base_price(self):
         """ choosing a random integer between 5-9 as the base price. """
         #base price generated a random number between 5-9 inclusively
         base_price = randint(5, 9)
-        #returns the random number
-        return base_price
+        #date.weekday() Return the day of the week as an integer, where Monday is 0 and Sunday is 6.
+        #
+        # date.isoweekday() Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
+        if self.order_time.weekday() != 5 or self.order_time.weekday() != 6:
+            if self.order_time.hour >= 8 and self.order_time.hour <= 11:
+                base_price += 4
 
+        return base_price
 
 
     def get_total(self, base_price):
@@ -51,6 +67,12 @@ class AbstractMelonOrder:
         # (or any class that has interited the Abstract, the shipped attribute
         # will change from default value of False to True)
         self.shipped = True
+
+class TooManyMelonsError(ValueError):
+    """Raise error when > 100 melons ordered """
+    def __init__(self):
+        super().__init__("Cannot order more than 100 melons")
+
 
 
 class GovernmentMelonOrder(AbstractMelonOrder):
@@ -82,7 +104,7 @@ class DomesticMelonOrder(AbstractMelonOrder):
     tax = 0.08
 
 
-class InternationalMelonOrder(AbstractMelonOrder):
+class InternationalMelonOrder (AbstractMelonOrder):
     """An international (non-US) melon order."""
 
     order_type = "international"
@@ -104,3 +126,5 @@ class InternationalMelonOrder(AbstractMelonOrder):
         """Return the country code."""
 
         return self.country_code
+
+order0 = InternationalMelonOrder("watermelon", 101, "AUS")
